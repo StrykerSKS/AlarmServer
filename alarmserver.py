@@ -453,7 +453,7 @@ class AlarmServer(asyncore.dispatcher):
             alarmserver_logger('Incoming web connection from %s' % repr(addr))
 
         try:
-            if (!config.USEHTTPS):
+            if (config.USEHTTPS == False):
                 HTTPChannel(self, conn, addr);
             else:
                 HTTPChannel(self, ssl.wrap_socket(conn, server_side=True, certfile=config.CERTFILE, keyfile=config.KEYFILE, ssl_version=ssl.PROTOCOL_TLSv1), addr)
