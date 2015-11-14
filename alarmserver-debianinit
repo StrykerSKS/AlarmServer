@@ -16,6 +16,7 @@ PATH=/bin:/usr/bin:/sbin:/usr/sbin
 NAME=alarmserver.py
 DAEMON_PATH=/opt/alarmserver
 CONFIG=/opt/alarmserver/conf/alarmserver.cfg
+DAEMON_OPTS="-c $CONFIG "
 PIDFILE=/var/run/$NAME.pid
 
 # adding libs to library path
@@ -25,7 +26,7 @@ PIDFILE=/var/run/$NAME.pid
 case "$1" in
   start)
 	echo -n "Starting alarmserver: "
-	start-stop-daemon --start  --pidfile $PIDFILE --make-pidfile  --background --no-close --chdir $DAEMON_PATH --exec $NAME > /dev/null 2>&1
+	start-stop-daemon --start  --pidfile $PIDFILE --make-pidfile  --background --no-close --chdir $DAEMON_PATH --exec $NAME $DAEMON_OPTS > /dev/null 2>&1
 	echo "done."
 	;;
   stop)
