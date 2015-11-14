@@ -77,6 +77,7 @@ class AlarmServerConfig():
         self._config.read(configfile)
 
         self.LOGURLREQUESTS = self.read_config_var('alarmserver', 'logurlrequests', True, 'bool')
+        self.USEHTTPS = self.read_config_var('alarmserver', 'usehttps', True, 'bool')
         self.HTTPSPORT = self.read_config_var('alarmserver', 'httpsport', 8111, 'int')
         self.CERTFILE = self.read_config_var('alarmserver', 'certfile', 'server.crt', 'str')
         self.KEYFILE = self.read_config_var('alarmserver', 'keyfile', 'server.key', 'str')
@@ -452,8 +453,10 @@ class AlarmServer(asyncore.dispatcher):
             alarmserver_logger('Incoming web connection from %s' % repr(addr))
 
         try:
-            # HTTPChannel(self, conn, addr)
-            HTTPChannel(self, ssl.wrap_socket(conn, server_side=True, certfile=config.CERTFILE, keyfile=config.KEYFILE, ssl_version=ssl.PROTOCOL_TLSv1), addr)
+            if (!config.USEHTTPS):
+                HTTPChannel(self, conn, addr);
+            else:
+                HTTPChannel(self, ssl.wrap_socket(conn, server_side=True, certfile=config.CERTFILE, keyfile=config.KEYFILE, ssl_version=ssl.PROTOCOL_TLSv1), addr)
         except ssl.SSLError:
             return
 
